@@ -8,11 +8,11 @@ export default function GameWords(props: GameWordsProps) {
 	for (let i = 0; i < props.words.length; i++) {
 		elements.push(
 			props.foundStatus[i] ? (
-				<li>
+				<li key={i}>
 					<s>{props.words[i]}</s>
 				</li>
 			) : (
-				<li>{props.words[i]}</li>
+				<li key={i}>{props.words[i]}</li>
 			)
 		);
 	}

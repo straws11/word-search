@@ -1,54 +1,48 @@
 import React from "react";
 import Board from "./Board";
 import GameWords from "./GameWords";
-import { chooseWords, populateGrid } from "../Utils";
+import { getWords, populateGrid } from "../Utils";
 
-export const BOARD_SIZE = 8;
+export const BOARD_SIZE = 5;
+
+/*interface GameProps {
+	grid: string[][];
+	words: string[];
+}*/
 
 export default function Game() {
-	//dealing with stupid textfile reading and populating grid
-	const [gameWords, setGameWords] = React.useState<string[]>([]);
-	const [grid, setGrid] = React.useState<string[][]>([]);
-
-	React.useEffect(() => {
-		async function fetchWords() {
-			try {
-				const words = await chooseWords(BOARD_SIZE);
-				setGameWords(words);
-			} catch (e) {
-				console.error(e);
-			}
-		}
-		fetchWords();
-	}, []);
-
-	React.useEffect(() => {
-		if (gameWords.length > 0) {
-			const newGrid = new Array(BOARD_SIZE)
-				.fill(null)
-				.map(() => new Array(BOARD_SIZE).fill(""));
-			console.log(newGrid, gameWords)
-			populateGrid(newGrid, gameWords);
-			setGrid(newGrid);
-		}
-	}, [gameWords]);
-
-	const [gameWordsStatus, setGameWordsStatus] = React.useState(
-		new Array(gameWords.length).fill(false)
-	);
+	// all state variables
 	const [moves, setMoves] = React.useState(0);
+	const [info, setInfo] = React.useState("");
+
+	const [gameWords, setGameWords] = React.useState<string[]>(
+		getWords(BOARD_SIZE)
+	);
+	const [gameWordsStatus, setGameWordsStatus] = React.useState<boolean[]>([]);
+	const [grid, setGrid] = React.useState<string[][]>([]);
 
 	const [filledStatus, setFilledStatus] = React.useState(
 		new Array(BOARD_SIZE)
 			.fill(null)
 			.map(() => new Array(BOARD_SIZE).fill(false))
 	);
-
-	// the rest
+	// create and populate grid ONCE
+	React.useEffect(() => {
+		const newGrid = new Array(BOARD_SIZE)
+			.fill(null)
+			.map(() => new Array(BOARD_SIZE).fill(""));
+		populateGrid(newGrid, gameWords);
+		setGrid(newGrid);
+		// update the gameWords because some might not have been successfully placed
+		const newGameWords = gameWords.filter((val) => val !== "");
+		setGameWords(newGameWords);
+		setGameWordsStatus(
+			Array.from({ length: newGameWords.length }, () => false)
+		);
+	}, []);
 
 	function updateFoundWord(newWord: string, cells: number[][]) {
 		//update which is the most recent found word, process if valid
-
 		setMoves(moves + 1);
 
 		// if not a game word, do nothing
@@ -63,12 +57,17 @@ export default function Game() {
 			newFilled[cells[i][0]][cells[i][1]] = true;
 		}
 		setFilledStatus(newFilled);
-		//TODO determine game won
+		// determine game won
+		console.log(newStatus);
+		if (newStatus.indexOf(false) === -1) {
+			setInfo("You found all the words, good job!");
+		}
 	}
 
 	return (
 		<div className="flex flex-col items-center justify-center">
 			<h1>Moves: {moves}</h1>
+			<h2>Info: {info}</h2>
 			{grid.length > 0 && (
 				<Board
 					grid={grid}

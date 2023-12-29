@@ -1,5 +1,6 @@
 import { BOARD_SIZE } from "./components/Game";
-export async function chooseWords(wordCount: number) {
+import wordset from "./better_words";
+/*export async function chooseWords(wordCount: number) {
 	try {
 		const response = await fetch("three_plus_words.txt");
 		if (!response.ok) {
@@ -22,7 +23,16 @@ export async function chooseWords(wordCount: number) {
 		console.error("There was a problem fetching the file:", error);
 		return [];
 	}
+}*/
+
+export function getWords(wordCount: number) {
+	const cats = wordset.categories;
+	const categoryKeys = Object.keys(cats);
+	const randomCatKey = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+	const randomCat = cats[randomCatKey];
+	return randomCat.filter((val) => val.length <= BOARD_SIZE);
 }
+
 
 export function populateGrid(grid: string[][], words: string[]) {
 	for (let i = 0; i < words.length; i++) {
@@ -55,7 +65,6 @@ export function populateGrid(grid: string[][], words: string[]) {
 					break;
 			}
 		}
-		console.log("placed", words[i]);
 	}
 
 	// fill gaps
@@ -136,7 +145,6 @@ export function placeMainDiagonal(
 		const y = Math.floor(Math.random() * (BOARD_SIZE - word.length));
 
 		var valid = true;
-		console.log("AH", grid, word);
 		for (let j = 0; j < word.length; j++) {
 			valid = grid[y + j][x + j] === word[j] || grid[y + j][x + j] === "";
 			if (!valid) break;

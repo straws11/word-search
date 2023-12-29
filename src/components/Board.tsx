@@ -138,7 +138,7 @@ export default function Board(props: BoardProps) {
 		for (let j = 0; j < SIZE; j++) {
 			row.push(
 				<WordCell
-					key={i.toString() + j.toString()}
+					key={i * SIZE + j}
 					handleClick={() => cellClick(j, i)}
 					letter={grid[j][i]}
 					filled={props.filledCells[j][i]}
@@ -146,7 +146,11 @@ export default function Board(props: BoardProps) {
 				/>
 			);
 		}
-		rows.push(<div className="inline-block">{row}</div>);
+		rows.push(
+			<div key={i} className="inline-block">
+				{row}
+			</div>
+		);
 	}
 
 	return <div className="border border-black m-10">{rows}</div>;
