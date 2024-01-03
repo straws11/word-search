@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from "./components/Game";
+import { BOARD_SIZE } from "./App";
 import wordset from "./better_words";
 /*export async function chooseWords(wordCount: number) {
 	try {
@@ -25,16 +25,76 @@ import wordset from "./better_words";
 	}
 }*/
 
-export function getWords(wordCount: number) {
+export function getWords(wordCount: number): string[] {
 	const cats = wordset.categories;
 	const categoryKeys = Object.keys(cats);
-	const randomCatKey = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+	const randomCatKey =
+		categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
 	const randomCat = cats[randomCatKey];
-	return randomCat.filter((val) => val.length <= BOARD_SIZE);
+	return randomCat.values.filter((val) => val.length <= BOARD_SIZE);
 }
 
+/**
+ * Generates a grid with words from the chosen category
+ * @param category User's chosen category
+ * @returns the grid and list of words
+ */
+export function generateGameData(category: string): [string[][], string[]] {
+	var words: string[] = [""];
+	var grid: string[][] = new Array(BOARD_SIZE)
+		.fill(null)
+		.map(() => new Array(BOARD_SIZE).fill(""));
 
-export function populateGrid(grid: string[][], words: string[]) {
+	// repeatedly attempt to populate grid until successful
+	// bit scuffy, but populateGrid will modify `words`, thus it will have that blank
+	while (words.indexOf("") !== -1) {
+		// reset vars
+		words = getCategoryWords(category, Math.floor(BOARD_SIZE/2));
+		grid = new Array(BOARD_SIZE)
+			.fill(null)
+			.map(() => new Array(BOARD_SIZE).fill(""));
+		// repopulate
+		populateGrid(grid, words);
+	}
+
+	fillBlanks(grid);
+	return [grid, words];
+}
+
+/**
+ * Retrieves all category display names.
+ */
+export function getCategories(): string[] {
+	const categoryKeys = Object.keys(wordset.categories);
+	var displayNames: string[] = [];
+	categoryKeys.forEach((val) => {
+		displayNames.push(wordset.categories[val].displayName);
+	});
+	return displayNames;
+}
+
+/**
+ * Get wordCount amount of words from categoryName category.
+ */
+function getCategoryWords(categoryName: string, wordCount: number): string[] {
+	const catKeys = Object.keys(wordset.categories);
+	var words: string[] = [];
+	catKeys.forEach((val) => {
+		if (wordset.categories[val].displayName === categoryName) {
+			words = wordset.categories[val].values;
+		}
+	});
+
+	// sort randomly, return the desired amount
+	return words.sort(() => 0.5 - Math.random()).slice(0, wordCount);
+}
+
+/**
+ * Attempts to add all words to the board
+ * @param grid 2d array of empty strings
+ * @param words array of words that need to be put into the array
+ */
+function populateGrid(grid: string[][], words: string[]) {
 	for (let i = 0; i < words.length; i++) {
 		var placed = false;
 		var attempts = 0;
@@ -66,9 +126,6 @@ export function populateGrid(grid: string[][], words: string[]) {
 			}
 		}
 	}
-
-	// fill gaps
-	fillBlanks(grid);
 }
 
 export function placeHorizontal(
