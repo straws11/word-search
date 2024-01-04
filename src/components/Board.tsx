@@ -153,5 +153,5 @@ export default function Board(props: BoardProps) {
 		);
 	}
 
-	return <div className="border border-black m-10">{rows}</div>;
+	return <div className="border border-black m-2 shadow-lg">{rows}</div>;
 }

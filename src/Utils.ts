@@ -25,6 +25,28 @@ import wordset from "./better_words";
 	}
 }*/
 
+export function getWelcomeBoard(): string[][] {
+	const welcomeGrid = [
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "W", "E", "L", "C", "O", "M", "E", "", "T", "O", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "W", "O", "R", "D", "S", "E", "A", "R", "C", "H", "!", "!", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "B", "Y", "", "", ""],
+		["", "", "", "", "", "", "", "S", "T", "R", "A", "W", "S", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+	];
+
+	return welcomeGrid;
+}
+
 export function getWords(wordCount: number): string[] {
 	const cats = wordset.categories;
 	const categoryKeys = Object.keys(cats);
@@ -49,7 +71,7 @@ export function generateGameData(category: string): [string[][], string[]] {
 	// bit scuffy, but populateGrid will modify `words`, thus it will have that blank
 	while (words.indexOf("") !== -1) {
 		// reset vars
-		words = getCategoryWords(category, Math.floor(BOARD_SIZE/2));
+		words = getCategoryWords(category, Math.floor(BOARD_SIZE / 2));
 		grid = new Array(BOARD_SIZE)
 			.fill(null)
 			.map(() => new Array(BOARD_SIZE).fill(""));
