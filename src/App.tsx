@@ -2,7 +2,9 @@ import React, { ChangeEvent } from "react";
 import { generateGameData, getCategories, getWelcomeBoard } from "./Utils";
 import Game from "./components/Game";
 import "./index.css";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import CategoryDropDown from "./components/CategoryDropDown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const BOARD_SIZE = 15;
 
@@ -28,24 +30,53 @@ function App() {
 	}
 
 	return (
-		<div className="App flex flex-col w-full min-h-screen">
-			<div className="w-full bg-green-400 border border-green-600 flex items-center justify-left p-4 gap-2">
-				<h3 className="text-lg pr-2">Choose a Category</h3>
-				<CategoryDropDown
-					handleSelect={onCategoryChange}
-					categories={getCategories()}
-				/>
-				<button
-					onClick={submitCategory}
-					className="border border-black rounded-md p-2 m-2 bg-gray-600 text-white"
+		<>
+			<div className="App flex flex-col w-full min-h-screen bg-blue-300">
+				<nav className="w-full bg-blue-700 flex items-center justify-between p-2 gap-2">
+					<div className="flex items-center">
+						<div className="items-center gap-3 block">
+							<a href="https://straws11.github.io">
+								<img
+									className="max-w-12 rounded-full"
+									src={process.env.PUBLIC_URL + "/favicon.ico"}
+								/>
+							</a>
+						</div>
+						<h3 className="text-xs md:text-lg p-2 text-white">
+							Choose a Category
+						</h3>
+						<CategoryDropDown
+							handleSelect={onCategoryChange}
+							categories={getCategories()}
+						/>
+						<button
+							onClick={submitCategory}
+							className="text-xs md:text-xl border border-black rounded-md p-2 m-1 bg-gray-600 text-white"
+						>
+							Generate Game
+						</button>
+					</div>
+					<div className="items-center gap-3 hidden md:flex">
+						<FontAwesomeIcon icon={faMagnifyingGlass} />
+						<h2 className="text-sm md:text-xl font-bold text-white">
+							Word Search
+						</h2>
+					</div>
+				</nav>
+				<div className="w-full">
+					<Game gameWords={words} grid={grid} />
+				</div>
+			</div>
+			<div className="bg-blue-950 text-white text-sm flex justify-between items-center p-4">
+				<a
+					className="text-md hover:text-gray-400 hover:underline"
+					href="https://straws11.github.io"
 				>
-					Generate Game
-				</button>
+					My Site
+				</a>
+				<div>Copyright &copy; {new Date().getFullYear()} Dylan Swarts</div>
 			</div>
-			<div className="w-full">
-				<Game gameWords={words} grid={grid} />
-			</div>
-		</div>
+		</>
 	);
 }
 

@@ -6,7 +6,7 @@ interface GameWordsProps {
 export default function GameWords(props: GameWordsProps) {
 	if (props.words.length === 0) return <></>;
 	const elements = [];
-	const liFormatting = "mb-4 text-lg";
+	const liFormatting = "mb-4 text-sm sm:text-md lg:text-xl text-lg";
 	for (let i = 0; i < props.words.length; i++) {
 		elements.push(
 			props.foundStatus[i] ? (
@@ -14,7 +14,7 @@ export default function GameWords(props: GameWordsProps) {
 					<s>{props.words[i]}</s>
 				</li>
 			) : (
-				<li className={`${liFormatting}`} key={i}>
+				<li className={`${liFormatting} text-white`} key={i}>
 					{props.words[i]}
 				</li>
 			)
@@ -22,12 +22,14 @@ export default function GameWords(props: GameWordsProps) {
 	}
 
 	return (
-		<div className="flex flex-col bg-orange-400 items-center justify-center p-4 border border-red-500 rounded-xl shadow-2xl">
-			<h1 className="text-2xl m-4 underline animate-pulse duration-700">
+		<div className="flex flex-col bg-blue-900 items-center justify-center p-2 xl:p-6 border border-black rounded-xl shadow-md shadow-white">
+			<h1 className="lg:text-2xl m-4 underline animate-pulse duration-700 text-white">
 				Word List
 			</h1>
-			<ul className="space-y-4">{elements}</ul>
-			<h2 className="text-xl m-4 pt-2">{`${
+			<ul className="grid grid-cols-5 lg:grid-cols-1 gap-x-4">
+				{elements}
+			</ul>
+			<h2 className="text-white text-sm sm:text-lg lg:text-2xl mb-2 pt-2">{`${
 				props.foundStatus.filter((val) => val).length
 			}/${props.words.length}`}</h2>
 		</div>

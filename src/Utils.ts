@@ -71,7 +71,7 @@ export function generateGameData(category: string): [string[][], string[]] {
 	// bit scuffy, but populateGrid will modify `words`, thus it will have that blank
 	while (words.indexOf("") !== -1) {
 		// reset vars
-		words = getCategoryWords(category, Math.floor(BOARD_SIZE / 2));
+		words = getCategoryWords(category, Math.floor(BOARD_SIZE));
 		grid = new Array(BOARD_SIZE)
 			.fill(null)
 			.map(() => new Array(BOARD_SIZE).fill(""));
@@ -118,6 +118,7 @@ function getCategoryWords(categoryName: string, wordCount: number): string[] {
  */
 function populateGrid(grid: string[][], words: string[]) {
 	for (let i = 0; i < words.length; i++) {
+		const word = words[i].toUpperCase();
 		var placed = false;
 		var attempts = 0;
 		while (!placed) {
@@ -134,16 +135,16 @@ function populateGrid(grid: string[][], words: string[]) {
 
 			switch (direction) {
 				case 0:
-					placed = placeHorizontal(grid, words[i], side);
+					placed = placeHorizontal(grid, word, side);
 					break;
 				case 1:
-					placed = placeVertical(grid, words[i], side);
+					placed = placeVertical(grid, word, side);
 					break;
 				case 2:
-					placed = placeMainDiagonal(grid, words[i], side);
+					placed = placeMainDiagonal(grid, word, side);
 					break;
 				case 3:
-					placed = placeOtherDiagonal(grid, words[i], side);
+					placed = placeOtherDiagonal(grid, word, side);
 					break;
 			}
 		}
@@ -274,12 +275,12 @@ export function placeOtherDiagonal(
 }
 
 export function fillBlanks(grid: string[][]) {
-	const ALPHA = "abcdefghijklmnopqrstuvwxyz";
+	const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (let i = 0; i < BOARD_SIZE; i++) {
 		for (let j = 0; j < BOARD_SIZE; j++) {
 			if (grid[j][i] === "") {
 				const letter = ALPHA[Math.floor(Math.random() * 26)];
-				grid[j][i] = letter.toUpperCase();
+				grid[j][i] = letter;
 			}
 		}
 	}

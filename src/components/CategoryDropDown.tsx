@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler } from "react";
+import { ChangeEventHandler } from "react";
 
 interface DropdownProps {
 	categories: string[]; // change to pass full categories, or pass names AND ids
@@ -7,14 +7,14 @@ interface DropdownProps {
 
 export default function CategoryDropDown(props: DropdownProps) {
 	const options = props.categories.map((cat, idx) => (
-		<option key={idx} value={cat}>
+		<option key={idx} value={cat} className="text-xs md:text-lg">
 			{cat}
 		</option>
 	));
 
 	return (
 		<div className="relative inline-block text-left">
-			<span className="rounded-md shadow-sm">
+			<span className="rounded-md shadow-sm text-xs md:text-lg">
 				<select
 					defaultValue="random"
 					onChange={props.handleSelect}

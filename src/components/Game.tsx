@@ -39,9 +39,10 @@ export default function Game(props: GameProps) {
 	function updateFoundWord(newWord: string, cells: number[][]) {
 		//update which is the most recent found word, process if valid
 		setMoves(moves + 1);
-
+		newWord = newWord.toLowerCase();
 		// if not a game word, do nothing
 		if (props.gameWords.indexOf(newWord) === -1) return;
+
 		// is a valid game word, update which items have been found
 		const newStatus = [...gameWordsStatus];
 		newStatus[props.gameWords.indexOf(newWord)] = true;
@@ -56,14 +57,25 @@ export default function Game(props: GameProps) {
 		// determine game won
 		if (newStatus.indexOf(false) === -1) {
 			processGameWon();
+		} else {
+			// if not won, still place the successful select sound
+			const audio = new Audio(process.env.PUBLIC_URL + "/found_word.wav");
+			audio.volume = 0.5;
+			audio.play();
 		}
 	}
 
 	function processGameWon() {
-		setGameWon(true);
 		const cacheCompletes = localStorage.getItem("wordSearchCount");
 		var userCompletes = cacheCompletes ? parseInt(cacheCompletes) : 0;
 		localStorage.setItem("wordSearchCount", (userCompletes + 1).toString());
+		const audio = new Audio(process.env.PUBLIC_URL + "/win_game.wav");
+		audio.volume = 0.5;
+		audio.play();
+		// delay visual to wait for sound
+		setTimeout(() => {
+			setGameWon(true);
+		}, 1000);
 	}
 
 	function getCompletedCount() {
@@ -71,31 +83,32 @@ export default function Game(props: GameProps) {
 	}
 
 	return (
-		<div className="flex flex-row items-center justify-evenly">
+		<div className="flex flex-col lg:flex-row items-center justify-evenly">
 			{/*<h1>Moves: {moves}</h1>
 			<h2>Info: {info}</h2>*/}
 			{gameWon ? (
-				<div className="flex flex-col items-center justify-center gap-10">
-					<h1 className="text-3xl">
-						You found all {props.gameWords.length} words!
-					</h1>
-					<h2 className="text-3xl">
+				<div className="flex flex-col items-center justify-center text-lg lg:text-2xl p-5 mt-10 border border-blue-500 bg-blue-950 text-white shadow-2xl rounded-lg">
+					<h1>You found all {props.gameWords.length} words!</h1>
+					<h2>
 						In total, you've finished{" "}
-						<div className="animate-bounce inline-block text-green-400 text-4xl p-2">
+						<div className="animate-bounce duration-1000 inline-block text-green-400 font-bold text-3xl p-2">
 							{getCompletedCount()}
 						</div>{" "}
 						word searches!
 					</h2>
 				</div>
 			) : (
-				<GameWords words={props.gameWords} foundStatus={gameWordsStatus} />
+				<>
+					<GameWords words={props.gameWords} foundStatus={gameWordsStatus} />
+
+					<Board
+						grid={props.grid}
+						onFind={updateFoundWord}
+						size={BOARD_SIZE}
+						filledCells={filledStatus}
+					/>
+				</>
 			)}
-			<Board
-				grid={props.grid}
-				onFind={updateFoundWord}
-				size={BOARD_SIZE}
-				filledCells={filledStatus}
-			/>
 		</div>
 	);
 }
