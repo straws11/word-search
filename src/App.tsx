@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+	import React, { ChangeEvent } from "react";
 import { generateGameData, getCategories, getWelcomeBoard } from "./Utils";
 import Game from "./components/Game";
 import "./index.css";

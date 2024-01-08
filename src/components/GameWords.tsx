@@ -22,11 +22,11 @@ export default function GameWords(props: GameWordsProps) {
 	}
 
 	return (
-		<div className="flex flex-col bg-blue-900 items-center justify-center p-2 xl:p-6 border border-black rounded-xl shadow-md shadow-white">
-			<h1 className="lg:text-2xl m-4 underline animate-pulse duration-700 text-white">
+		<div className="flex flex-col bg-blue-900 items-center justify-center p-2 xl:p-6 border border-black rounded-xl shadow-md shadow-white w-11/12 lg:w-fit">
+			<h1 className="lg:text-2xl m-4 tracking-widest underline animate-pulse duration-700 text-white">
 				Word List
 			</h1>
-			<ul className="grid grid-cols-5 lg:grid-cols-1 gap-x-4">
+			<ul className="grid grid-cols-3 min-[400px]:grid-cols-4 sm:grid-cols-5 lg:grid-cols-1 gap-x-4">
 				{elements}
 			</ul>
 			<h2 className="text-white text-sm sm:text-lg lg:text-2xl mb-2 pt-2">{`${

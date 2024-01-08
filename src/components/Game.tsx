@@ -2,6 +2,7 @@ import React from "react";
 import Board from "./Board";
 import GameWords from "./GameWords";
 import { BOARD_SIZE } from "../App";
+import Instructions from "./Instructions";
 
 interface GameProps {
 	gameWords: string[];
@@ -10,6 +11,7 @@ interface GameProps {
 
 export default function Game(props: GameProps) {
 	// all state variables
+	const [visible, setVisible] = React.useState(false);
 	const [moves, setMoves] = React.useState(0);
 	const [gameWon, setGameWon] = React.useState(false);
 	const [gameWordsStatus, setGameWordsStatus] = React.useState<boolean[]>([]);
@@ -83,32 +85,40 @@ export default function Game(props: GameProps) {
 	}
 
 	return (
-		<div className="flex flex-col lg:flex-row items-center justify-evenly">
-			{/*<h1>Moves: {moves}</h1>
+		<>
+			<div className="flex items-center justify-end">
+				<button className="text-xs md:text-lg bg-blue-900 text-white p-2 m-2 w-fit rounded-md border border-black" onClick={() => setVisible(true)}>
+					How to Play
+				</button>
+			</div>
+			<div className="flex flex-col lg:flex-row items-center justify-evenly">
+				{/*<h1>Moves: {moves}</h1>
 			<h2>Info: {info}</h2>*/}
-			{gameWon ? (
-				<div className="flex flex-col items-center justify-center text-lg lg:text-2xl p-5 mt-10 border border-blue-500 bg-blue-950 text-white shadow-2xl rounded-lg">
-					<h1>You found all {props.gameWords.length} words!</h1>
-					<h2>
-						In total, you've finished{" "}
-						<div className="animate-bounce duration-1000 inline-block text-green-400 font-bold text-3xl p-2">
-							{getCompletedCount()}
-						</div>{" "}
-						word searches!
-					</h2>
-				</div>
-			) : (
-				<>
-					<GameWords words={props.gameWords} foundStatus={gameWordsStatus} />
+				{visible && <Instructions handleToggle={() => setVisible(!visible)} />}
+				{gameWon ? (
+					<div className="flex flex-col items-center justify-center text-lg lg:text-2xl p-5 mt-10 border border-blue-500 bg-blue-950 text-white shadow-2xl rounded-lg">
+						<h1>You found all {props.gameWords.length} words!</h1>
+						<h2>
+							In total, you've finished{" "}
+							<div className="animate-bounce duration-1000 inline-block text-green-400 font-bold text-3xl p-2">
+								{getCompletedCount()}
+							</div>{" "}
+							word searches!
+						</h2>
+					</div>
+				) : (
+					<>
+						<GameWords words={props.gameWords} foundStatus={gameWordsStatus} />
 
-					<Board
-						grid={props.grid}
-						onFind={updateFoundWord}
-						size={BOARD_SIZE}
-						filledCells={filledStatus}
-					/>
-				</>
-			)}
-		</div>
+						<Board
+							grid={props.grid}
+							onFind={updateFoundWord}
+							size={BOARD_SIZE}
+							filledCells={filledStatus}
+						/>
+					</>
+				)}
+			</div>
+		</>
 	);
 }
